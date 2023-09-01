@@ -1,7 +1,7 @@
 const _cache = new WeakMap<object, unknown>()
-const _callbacks = new WeakMap<object, Callback<unknown>[]>()
 
 type Callback<T> = (t: T) => void
+const _callbacks = new WeakMap<object, Callback<any>[]>()
 
 export type Observed<T extends object> = T & {
 	subscribe: (callback: Callback<T>) => void,
