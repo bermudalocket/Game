@@ -4,5 +4,5 @@
 </script>
 
 {#if browser}
-	<canvas bind:this={canvas} width={screen.availWidth} height={screen.availHeight}/>
+	<canvas bind:this={canvas} width={window.innerWidth} height={window.innerHeight}/>
 {/if}
