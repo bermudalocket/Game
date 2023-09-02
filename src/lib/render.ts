@@ -61,6 +61,7 @@ async function main(gl: WebGL2RenderingContext) {
 		uniformLocations: {
 			projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
 			modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+			resolution: gl.getUniformLocation(shaderProgram, "uResolution"),
 		},
 	}
 	glState.set(state)
@@ -79,6 +80,7 @@ async function main(gl: WebGL2RenderingContext) {
 	gl.useProgram(shaderProgram)
 	gl.uniformMatrix4fv(state.uniformLocations.projectionMatrix, false, projectionMatrix)
 	gl.uniformMatrix4fv(state.uniformLocations.modelViewMatrix, false, modelViewMatrix)
+	gl.uniform2fv(state.uniformLocations.resolution, [gl.canvas.width, gl.canvas.width])
 
 	const offset = 0
 	const vertexCount = 4

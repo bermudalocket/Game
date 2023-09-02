@@ -7,5 +7,6 @@ export type GLState = {
 	uniformLocations: {
 		projectionMatrix: WebGLUniformLocation | null,
 		modelViewMatrix: WebGLUniformLocation | null,
+		resolution: WebGLUniformLocation | null,
 	},
 }
