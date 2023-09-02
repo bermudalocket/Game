@@ -1,5 +1,6 @@
 export type Mesh = Float32Array
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace MeshUtil {
 
 	export function quad(w: number, h: number) {

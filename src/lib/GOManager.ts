@@ -35,13 +35,13 @@ export class GOManager {
 		this.#readyToDraw = true
 	}
 
-	public static draw(gl: WebGL2RenderingContext, state: GLState): void {
+	public static async draw(gl: WebGL2RenderingContext, state: GLState) {
 		if (!this.#readyToDraw) {
 			throw new Error("GOManager is not ready to draw")
 		}
 		this.#readyToDraw = false
 		for (const gameObject of GOManager.#gameObjects) {
-			gameObject.draw(gl, state)
+			await gameObject.draw(gl, state)
 		}
 		this.#readyToTick = true
 	}
