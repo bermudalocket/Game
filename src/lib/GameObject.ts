@@ -35,9 +35,16 @@ export class GameObject implements Disposable {
 		GOManager.addGameObject(this)
 	}
 
-	#dataForAttribute(attr: Attribute): { data: Float32Array, stride: number } {
+	#dataForAttribute(attr: Attribute): { data: Float32Array, size: number } {
 		if (attr === Attribute.POSITION) {
-			return { data: this.#mesh, stride: 2 }
+			return { data: this.#mesh, size: 2 }
+		} else if (attr === Attribute.COLOR) {
+			return { data: new Float32Array([
+				1, 1, 1, 1,
+				1, 0, 0, 1,
+				0, 1, 0, 1,
+				0, 0, 1, 1,
+			]), size: 4 }
 		}
 		throw new Error(`Could not find data for attribute ${attr}`)
 	}
@@ -84,17 +91,23 @@ export class GameObject implements Disposable {
 	 * @returns A promise that resolves when drawing is complete
 	 */
 	public async draw(gl: WebGL2RenderingContext, state: GLState) {
+		gl.uniform2f(gl.getUniformLocation(state.program, "u_translation"), this.position.x, this.position.y)
+
 		for (const prop of BUFFERABLE_ATTRIBUTES) {
 			const buffer = this.#buffers.get(prop)
 			if (!buffer) {
 				return Promise.reject(`Could not find buffer for ${prop}`)
 			}
-			const location = state.attrib[prop]
+			const location = state.loc(prop) as number
+			if (location === -1) {
+				// check: is it being optimized out of the shader code?
+				return Promise.reject(`Could not find location for ${prop}`)
+			}
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-			gl.vertexAttribPointer(location, this.#dataForAttribute(prop).stride, gl.FLOAT, false, 0, 0)
+			gl.bufferData(gl.ARRAY_BUFFER, this.#dataForAttribute(prop).data, gl.STATIC_DRAW)
 			gl.enableVertexAttribArray(location)
+			gl.vertexAttribPointer(location, this.#dataForAttribute(prop).size, gl.FLOAT, false, 0, 0)
 		}
-		console.log("done drawing")
 		return Promise.resolve()
 	}
 
