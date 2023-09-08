@@ -1,4 +1,4 @@
-import { BUFFERABLE_ATTRIBUTES, Attribute } from "./render"
+import { Attribute, BUFFERABLE_ATTRIBUTES } from "./render"
 
 export enum Uniform {
 	RESOLUTION = "u_resolution",
@@ -6,24 +6,17 @@ export enum Uniform {
 
 export class GLState {
 
-	readonly #gl: WebGL2RenderingContext
-
 	readonly #program: WebGLProgram
 
 	readonly #attribs: Partial<Record<Attribute, number>> = { }
 
 	readonly #uniforms: Partial<Record<Uniform, WebGLUniformLocation>> = { }
 
-	public constructor(gl: WebGL2RenderingContext, program: WebGLProgram) {
-		this.#gl = gl
+	public constructor(program: WebGLProgram) {
 		this.#program = program
 		for (const attrib of BUFFERABLE_ATTRIBUTES) {
 			this.#attribs[attrib] = gl.getAttribLocation(program, attrib)
 		}
-	}
-
-	public get gl() {
-		return this.#gl
 	}
 
 	public get program() {

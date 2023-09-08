@@ -7,6 +7,9 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
+	// eslint-disable-next-line no-var
+	var gl: WebGL2RenderingContext
 }
 
 export {};

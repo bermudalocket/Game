@@ -31,7 +31,7 @@ const getShaderSource = async (type: ShaderType) => {
 	return text
 }
 
-export const initShaderProgram = async (gl: WebGL2RenderingContext) => {
+export const initShaderProgram = async () => {
 	const shaderProgram = gl.createProgram()
 	if (!shaderProgram) {
 		throw new Error("Could not create shader program")

@@ -3,7 +3,7 @@ import { GLState } from "$lib/GLState"
 import { GOManager } from "$lib/GOManager"
 import { MeshUtil } from "$lib/Mesh"
 import { initShaderProgram } from "$lib/shaders"
-import { get, writable } from "svelte/store"
+import { writable } from "svelte/store"
 
 /**
  * The WebGL context. This is the main entry point for the game's rendering.
@@ -11,13 +11,6 @@ import { get, writable } from "svelte/store"
  */
 export const glContext = writable<WebGL2RenderingContext>()
 glContext.subscribe(main)
-
-export const glState = writable<GLState>()
-
-export const getGLContext = () => ({
-	gl: get(glContext),
-	glState: get(glState),
-})
 
 //-------------------------------------------------------------------------
 
@@ -35,21 +28,22 @@ async function main(gl: WebGL2RenderingContext) {
 		return
 	}
 
-	const shaderProgram = await initShaderProgram(gl)
+	globalThis.gl = gl
+
+	const shaderProgram = await initShaderProgram()
 	if (!shaderProgram) {
 		throw new Error("Could not create shader program")
 	}
 
-	const state = new GLState(gl, shaderProgram)
-	glState.set(state)
+	const state = new GLState(shaderProgram)
 
-	const go = new GameObject(gl, { x: 25, y: 25, z: 0 }, MeshUtil.quad(250, 250))
+	const go = new GameObject({ x: 25, y: 25, z: 0 }, MeshUtil.quad(250, 250))
 
 	// render
-	requestAnimationFrame(() => renderLoop(gl, state))
+	requestAnimationFrame(() => renderLoop(state))
 }
 
-async function renderLoop(gl: WebGL2RenderingContext, state: GLState) {
+async function renderLoop(state: GLState) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.clearColor(0, 0, 0, 1)
 	gl.clearDepth(1.0)
@@ -65,5 +59,5 @@ async function renderLoop(gl: WebGL2RenderingContext, state: GLState) {
 	await GOManager.draw(gl, state)
 
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-	requestAnimationFrame(() => renderLoop(gl, state))
+	requestAnimationFrame(() => renderLoop(state))
 }

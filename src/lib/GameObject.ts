@@ -16,7 +16,7 @@ export class GameObject implements Disposable {
 	readonly #mesh: Mesh
 	readonly #texture: WebGLTexture | null
 
-	public constructor(gl: WebGL2RenderingContext, position: Vector3, mesh: Mesh, texture: WebGLTexture | null = null) {
+	public constructor(position: Vector3, mesh: Mesh, texture: WebGLTexture | null = null) {
 		this.#id = crypto.randomUUID()
 		this.#position = position
 		this.#mesh = mesh
