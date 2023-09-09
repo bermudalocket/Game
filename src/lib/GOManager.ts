@@ -8,7 +8,9 @@ export class GOManager {
 	static #readyToTick = true
 	static #readyToDraw = false
 
-	private constructor() { }
+	private constructor() {
+		// noop
+	}
 
 	public static get gameObjects(): ReadonlySet<GameObject> {
 		return this.#gameObjects
@@ -23,6 +25,7 @@ export class GOManager {
 	}
 
 	static #ticks = 0
+
 	public static async tick() {
 		if (!this.#readyToTick) {
 			throw new Error("GOManager is not ready to tick")
@@ -35,13 +38,13 @@ export class GOManager {
 		this.#readyToDraw = true
 	}
 
-	public static async draw(gl: WebGL2RenderingContext, state: GLState) {
+	public static async draw(state: GLState) {
 		if (!this.#readyToDraw) {
 			throw new Error("GOManager is not ready to draw")
 		}
 		this.#readyToDraw = false
 		for (const gameObject of GOManager.#gameObjects) {
-			await gameObject.draw(gl, state)
+			await gameObject.draw(state)
 		}
 		this.#readyToTick = true
 	}

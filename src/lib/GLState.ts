@@ -1,41 +1,30 @@
-import { Attribute, BUFFERABLE_ATTRIBUTES } from "./render"
+import { type Attribute, Attributes } from "./render"
 
-export enum Uniform {
-	RESOLUTION = "u_resolution",
-}
+export const Uniforms = [
+	"u_resolution",
+] as const
+export type Uniform = typeof Uniforms[number]
 
 export class GLState {
 
 	readonly #program: WebGLProgram
+	public get program() { return this.#program }
 
-	readonly #attribs: Partial<Record<Attribute, number>> = { }
+	readonly #attribs = {} as Record<Attribute, number>
+	public get attribs() { return this.#attribs }
 
-	readonly #uniforms: Partial<Record<Uniform, WebGLUniformLocation>> = { }
+	readonly #uniforms = {} as Record<Uniform, WebGLUniformLocation>
+	public get uniforms() { return this.#uniforms }
 
 	public constructor(program: WebGLProgram) {
 		this.#program = program
-		for (const attrib of BUFFERABLE_ATTRIBUTES) {
+		for (const attrib of Attributes) {
 			this.#attribs[attrib] = gl.getAttribLocation(program, attrib)
 		}
-	}
-
-	public get program() {
-		return this.#program
-	}
-
-	public setLoc(prop: Attribute | Uniform, loc: number | WebGLUniformLocation) {
-		if (typeof loc === "number") {
-			this.#attribs[prop as Attribute] = loc
-		} else {
-			this.#uniforms[prop as Uniform] = loc
-		}
-	}
-
-	public loc(prop: Attribute | Uniform): number | WebGLUniformLocation | undefined {
-		if (prop in this.#attribs) {
-			return this.#attribs[prop as Attribute]
-		} else {
-			return this.#uniforms[prop as Uniform]
+		for (const uniform of Uniforms) {
+			const loc = gl.getUniformLocation(program, uniform)
+			if (!loc) throw new Error(`Could not find location for uniform ${uniform}`)
+			this.#uniforms[uniform] = loc
 		}
 	}
 
