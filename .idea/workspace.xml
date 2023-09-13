@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="9b8daabd-3266-4443-8f61-1138762ebcb5" name="Changes" comment="Components">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/GLState.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GLState.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/GOManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GOManager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/GameObject.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GameObject.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/render.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/render.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/postcss.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,8 +60,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "true",
     "git-widget-placeholder": "main",
-    "javascript.nodejs.core.library.configured.version": "18.13.0",
-    "javascript.nodejs.core.library.typings.version": "18.13.0",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "20.5.1",
+    "javascript.nodejs.core.library.typings.version": "20.5.1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -71,7 +72,7 @@
     "nodejs_package_manager_path": "npm",
     "settings.build.tools.auto.reload": "ALL",
     "settings.editor.selected.configurable": "preferences.sourceCode.TypeScript",
-    "ts.external.directory.path": "/Users/bermudalocket/git/game/node_modules/typescript/lib",
+    "ts.external.directory.path": "D:\\work\\code\\git\\js\\game\\node_modules\\typescript\\lib",
     "typescript.add.unambiguous.imports.on.the.fly": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -97,6 +98,9 @@
       <updated>1693855358260</updated>
       <workItem from="1693855359556" duration="39893000" />
       <workItem from="1694190692040" duration="16634000" />
+      <workItem from="1694545897118" duration="687000" />
+      <workItem from="1694613835942" duration="603000" />
+      <workItem from="1694628713542" duration="1175000" />
     </task>
     <task id="LOCAL-00001" summary="Make gl global">
       <option name="closed" value="true" />
