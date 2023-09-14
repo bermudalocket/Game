@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b8daabd-3266-4443-8f61-1138762ebcb5" name="Changes" comment="postcss-normalize">
+    <list default="true" id="9b8daabd-3266-4443-8f61-1138762ebcb5" name="Changes" comment="Canvas viewport auto-resize">
+      <change beforePath="$PROJECT_DIR$/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.cjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/components/Canvas.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/Canvas.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/render.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/render.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/Mesh.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/Mesh.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +100,7 @@
       <workItem from="1694613835942" duration="603000" />
       <workItem from="1694628713542" duration="7168000" />
       <workItem from="1694680810567" duration="3745000" />
-      <workItem from="1694697434983" duration="4133000" />
+      <workItem from="1694697434983" duration="5635000" />
     </task>
     <task id="LOCAL-00001" summary="Make gl global">
       <option name="closed" value="true" />
@@ -135,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694630151145</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Canvas viewport auto-resize">
+      <option name="closed" value="true" />
+      <created>1694701981617</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1694701981617</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +164,8 @@
     <MESSAGE value="Update workspace settings sync" />
     <MESSAGE value="Components" />
     <MESSAGE value="postcss-normalize" />
-    <option name="LAST_COMMIT_MESSAGE" value="postcss-normalize" />
+    <MESSAGE value="Canvas viewport auto-resize" />
+    <option name="LAST_COMMIT_MESSAGE" value="Canvas viewport auto-resize" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

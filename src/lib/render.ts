@@ -4,7 +4,9 @@ import {GOManager} from "$lib/GOManager"
 import {MeshUtil} from "$lib/Mesh"
 import {initShaderProgram} from "$lib/shaders"
 import {writable} from "svelte/store"
-import {onResize, resizeCanvasToDisplaySize} from "$lib/canvas";
+import {CanvasUtil} from "$lib/canvas";
+import onResize = CanvasUtil.onResize;
+import resizeCanvasToDisplaySize = CanvasUtil.resizeCanvasToDisplaySize;
 
 /**
  * The WebGL context. This is the main entry point for the game's rendering.
