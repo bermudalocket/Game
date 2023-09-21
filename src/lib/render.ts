@@ -48,6 +48,8 @@ export async function main(gl: WebGL2RenderingContext) {
 
 	// render
 	const glState = get(glStateStore)
+
+	console.log("Shaders: ", glState)
 	requestAnimationFrame(() => renderLoop(glState))
 }
 
@@ -65,7 +67,7 @@ async function renderLoop(state: GLState) {
 	await GOManager.tick()
 
 	for (const shaderName of Object.values(ShaderType)) {
-		const shader = state.getShader(shaderName)
+		const shader = state.getShaderAndSetActive(shaderName)
 		gl.useProgram(shader.program)
 		for (const gameObject of GOManager.gameObjects) {
 			for (const [ uniform, uloc ] of Object.entries(shader.uniforms)) {

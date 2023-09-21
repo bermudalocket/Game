@@ -22,4 +22,9 @@ export class GLState {
 		return this.#shaders[type]
 	}
 
+	public getShaderAndSetActive(type: ShaderType) {
+		this.activeShader = type
+		return this.getShader(type)
+	}
+
 }
