@@ -1,16 +1,12 @@
 <script lang="ts">
-	import Canvas from "$lib/components/Canvas.svelte"
-	import { glContext } from "$lib/render"
+	import { canvasStore } from "../hooks.client"
+	import Canvas from "./Canvas.svelte"
 
 	let canvas: HTMLCanvasElement
 
 	$: if (canvas) {
-		const ctx = canvas.getContext('webgl2')
-		if (ctx) {
-			console.log("Setting context: ", ctx)
-			glContext.set(ctx)
-		}
+		canvasStore.set(canvas)
 	}
 </script>
 
-<Canvas bind:canvas />
+<Canvas bind:canvas/>

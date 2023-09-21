@@ -1,96 +1,91 @@
-import {ColorComponent, GameObject, MeshComponent} from "$lib/GameObject"
-import {GLState} from "$lib/GLState"
-import {GOManager} from "$lib/GOManager"
-import {MeshUtil} from "$lib/Mesh"
-import {initShaderProgram} from "$lib/shaders"
-import {writable} from "svelte/store"
-import {CanvasUtil} from "$lib/canvas";
-import onResize = CanvasUtil.onResize;
-import resizeCanvasToDisplaySize = CanvasUtil.resizeCanvasToDisplaySize;
+import { CanvasUtil } from "$lib/canvas"
+import { ColorComponent } from "$lib/components/ColorComponent"
+import { MeshComponent } from "$lib/components/MeshComponent"
+import { GameObject } from "$lib/GameObject"
+import type { GLState } from "$lib/GLState"
+import { GOManager } from "$lib/GOManager"
+import { MeshUtil } from "$lib/MeshUtil"
+import { perf } from "$lib/performance"
+import { ShaderType } from "$lib/shaders"
+import { get } from "svelte/store"
+import { glStateStore } from "../hooks.client"
+import onResize = CanvasUtil.onResize
+import resizeCanvasToDisplaySize = CanvasUtil.resizeCanvasToDisplaySize
 
-/**
- * The WebGL context. This is the main entry point for the game's rendering.
- * Set when +page.svelte is mounted.
- */
-export const glContext = writable<WebGL2RenderingContext>()
-glContext.subscribe(main)
+const resizeObserverSizeMap: Map<Element, number[]> = new Map()
+let canvasSize = [ 0, 0 ]
 
-//-------------------------------------------------------------------------
+export async function main(gl: WebGL2RenderingContext) {
+	if (!gl) {
+		console.log("No context yet or browser does not support WebGL2")
+		return
+	}
 
-export const Attributes = [
-    "a_vertex",
-    "a_color",
-    "a_normal",
-] as const
-export type Attribute = typeof Attributes[number]
+	const canvas = <HTMLCanvasElement>gl.canvas
 
-const resizeObserverSizeMap: Map<Element, number[]> = new Map();
-let canvasSize = [0, 0];
+	resizeObserverSizeMap.set(canvas, [ 800, 600 ])
+	const resizeObserver = new ResizeObserver((entries) => {
+		onResize(entries, resizeObserverSizeMap, window.devicePixelRatio)
+		canvasSize = resizeObserverSizeMap.get(canvas) || [ 800, 600 ]
+	})
+	try {
+		resizeObserver.observe(canvas, { box: "device-pixel-content-box" })
+	} catch (ex) {
+		resizeObserver.observe(canvas, { box: "content-box" })
+	}
 
-async function main(gl: WebGL2RenderingContext) {
-    if (!gl) {
-        console.log("No context yet or browser does not support WebGL2")
-        return
-    }
+	const go = new GameObject({ x: 25, y: 25 })
+	const meshComp = go.addComponent(MeshComponent)
+	meshComp.mesh = MeshUtil.quad(250, 250)
+	const colorComp = go.addComponent(ColorComponent)
+	colorComp.format = "per_vertex"
+	colorComp.color = [
+		[ 1, 1, 1, 1, ],
+		[ 1, 0, 0, 1, ],
+		[ 0, 1, 0, 1, ],
+		[ 0, 0, 1, 1, ],
+	]
 
-    const canvas = <HTMLCanvasElement>gl.canvas;
-
-    resizeObserverSizeMap.set(canvas, [800, 600]);
-    const resizeObserver = new ResizeObserver((entries) => {
-        onResize(entries, resizeObserverSizeMap, window.devicePixelRatio)
-        canvasSize = resizeObserverSizeMap.get(canvas) || [800, 600];
-    });
-    try {
-        resizeObserver.observe(canvas, {box: 'device-pixel-content-box'});
-    } catch (ex) {
-        resizeObserver.observe(canvas, {box: 'content-box'});
-    }
-
-    globalThis.gl = gl
-
-    const shaderProgram = await initShaderProgram()
-    if (!shaderProgram)
-        throw new Error("Could not create shader program")
-
-    const state = new GLState(shaderProgram)
-
-    const go = new GameObject({x: 25, y: 25, z: 0})
-    const meshComp = go.addComponent(MeshComponent)
-    meshComp.mesh = MeshUtil.quad(250, 250)
-    const colorComp = go.addComponent(ColorComponent)
-    colorComp.format = "per_vertex"
-    colorComp.color = [
-        [1, 1, 1, 1,],
-        [1, 0, 0, 1,],
-        [0, 1, 0, 1,],
-        [0, 0, 1, 1,],
-    ]
-
-    // render
-    requestAnimationFrame(() => renderLoop(state))
+	// render
+	const glState = get(glStateStore)
+	requestAnimationFrame(() => renderLoop(glState))
 }
 
 async function renderLoop(state: GLState) {
-    if (resizeCanvasToDisplaySize(<HTMLCanvasElement>gl.canvas, {
-        displayWidth: canvasSize[0],
-        displayHeight: canvasSize[1]
-    }))
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+	perf.start("renderLoop")
+	if (resizeCanvasToDisplaySize(<HTMLCanvasElement>gl.canvas, {
+		displayWidth: canvasSize[0],
+		displayHeight: canvasSize[1]
+	}))
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    gl.clearColor(0, 0, 0, 1)
-    gl.clearDepth(1.0)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LEQUAL)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    gl.useProgram(state.program)
+	gl.clear(gl.COLOR_BUFFER_BIT)
+	gl.clearColor(0, 0, 0, 1)
 
-    gl.uniform2f(gl.getUniformLocation(state.program, "u_resolution"), gl.canvas.width, gl.canvas.height)
+	await GOManager.tick()
 
-    await GOManager.tick()
-    await GOManager.draw(state)
+	for (const shaderName of Object.values(ShaderType)) {
+		const shader = state.getShader(shaderName)
+		gl.useProgram(shader.program)
+		for (const gameObject of GOManager.gameObjects) {
+			for (const [ uniform, uloc ] of Object.entries(shader.uniforms)) {
+				switch (uniform) {
+					case "u_resolution":
+						gl.uniform2f(uloc, gl.canvas.width, gl.canvas.height)
+						break
+					case "u_translation":
+						gl.uniform2f(uloc, gameObject.position.x, gameObject.position.y)
+						break
+				}
+			}
+			if (gameObject.getShaderType() === shaderName) {
+				await gameObject.draw(state)
+			}
+		}
+	}
 
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
 
-    requestAnimationFrame(() => renderLoop(state))
+	requestAnimationFrame(() => renderLoop(state))
+	perf.end("renderLoop")
 }

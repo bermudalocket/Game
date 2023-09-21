@@ -1,31 +1,25 @@
-import { type Attribute, Attributes } from "./render"
-
-export const Uniforms = [
-	"u_resolution",
-] as const
-export type Uniform = typeof Uniforms[number]
+import { ShaderType, type ShaderWrapper } from "$lib/shaders"
 
 export class GLState {
 
-	readonly #program: WebGLProgram
-	public get program() { return this.#program }
+	readonly #shaders: Record<ShaderType, ShaderWrapper>
 
-	readonly #attribs = {} as Record<Attribute, number>
-	public get attribs() { return this.#attribs }
+	#activeShader: ShaderType = ShaderType.COLOR
 
-	readonly #uniforms = {} as Record<Uniform, WebGLUniformLocation>
-	public get uniforms() { return this.#uniforms }
+	public constructor(shaders: Record<ShaderType, ShaderWrapper>) {
+		this.#shaders = shaders
+	}
 
-	public constructor(program: WebGLProgram) {
-		this.#program = program
-		for (const attrib of Attributes) {
-			this.#attribs[attrib] = gl.getAttribLocation(program, attrib)
-		}
-		for (const uniform of Uniforms) {
-			const loc = gl.getUniformLocation(program, uniform)
-			if (!loc) throw new Error(`Could not find location for uniform ${uniform}`)
-			this.#uniforms[uniform] = loc
-		}
+	public get activeShader(): ShaderWrapper {
+		return this.#shaders[this.#activeShader]
+	}
+
+	public set activeShader(value: ShaderType) {
+		this.#activeShader = value
+	}
+
+	public getShader(type: ShaderType) {
+		return this.#shaders[type]
 	}
 
 }

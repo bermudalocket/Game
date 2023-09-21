@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="NodeJS" />
+    <plugin id="com.github.copilot" />
+    <plugin id="com.intellij.completion.ml.ranking" />
+    <plugin id="com.intellij.tailwindcss" />
+    <plugin id="dev.blachut.svelte.lang" />
+    <plugin id="intellij.vitejs" />
+  </component>
+</project>

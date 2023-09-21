@@ -1,78 +1,117 @@
-const _cache = new Map<ShaderType, string>()
-
-const ShaderType = [
-	"vertex",
-	"frag",
+export const Attributes = [
+	"a_vertex",
+	"a_color",
+	"a_normal",
 ] as const
+export type Attribute = typeof Attributes[number]
 
-export type ShaderType = typeof ShaderType[number]
+export const Uniforms = [
+	"u_resolution",
+	"u_translation",
+] as const
+export type Uniform = typeof Uniforms[number]
 
-const ShaderData = {
-	vertex: {
-		glType: 35633, // WebGL2RenderingContext.VERTEX_SHADER,
-	},
-	frag: {
-		glType: 35632, // WebGL2RenderingContext.FRAGMENT_SHADER,
-	},
-} as const satisfies Record<ShaderType, { glType: number }>
-
-const ShaderTypes = Object.keys(ShaderData) as ShaderType[]
-
-const getShaderSource = async (type: ShaderType) => {
-	if (_cache.has(type)) {
-		return _cache.get(type)
-	}
-	const response = await fetch(`/shaders/${type}_shader.glsl`)
-	if (!response.ok) {
-		throw new Error(`Bad response: ${response.statusText}`)
-	}
-	const text = await response.text()
-	_cache.set(type, text)
-	return text
+interface IShader {
+	readonly type: |
+		WebGL2RenderingContext["VERTEX_SHADER"] |
+		WebGL2RenderingContext["FRAGMENT_SHADER"]
+	readonly source: string
 }
 
-export const initShaderProgram = async () => {
-	const shaderProgram = gl.createProgram()
-	if (!shaderProgram) {
+interface IVertexShader extends IShader {
+	readonly type: WebGL2RenderingContext["VERTEX_SHADER"]
+}
+
+interface IFragmentShader extends IShader {
+	readonly type: WebGL2RenderingContext["FRAGMENT_SHADER"]
+}
+
+type ShaderCompilationData = {
+	readonly vertex: IVertexShader,
+	readonly frag: IFragmentShader,
+}
+
+export type ShaderWrapper = {
+	readonly program: WebGLProgram,
+	readonly attribs: Record<Attribute, number>,
+	readonly uniforms: Record<Uniform, WebGLUniformLocation>,
+}
+
+export enum ShaderType {
+	COLOR = "color",
+	TEXTURE = "texture",
+}
+
+export namespace ShaderUtil {
+	export function bootstrap() {
+		return _bootstrap()
+	}
+}
+
+async function _bootstrap() {
+	const shaders = {} as Record<ShaderType, ShaderWrapper>
+	const fetchSource = async (type: ShaderType) => {
+		return Promise.all([
+			fetch(`http://localhost:5173/shaders/vertex_${type}.glsl`).then(res => res.text()),
+			fetch(`http://localhost:5173/shaders/frag_${type}.glsl`).then(res => res.text()),
+		]).then(([ vs, fs ]) => [ vs, fs ])
+	}
+	for (const name of Object.values(ShaderType)) {
+		const [ vs, fs ] = await fetchSource(name)
+		const data = {
+			vertex: { type: gl.VERTEX_SHADER, source: vs },
+			frag: { type: gl.FRAGMENT_SHADER, source: fs },
+		}
+		const shader = createShaderWrapper(data)
+		if (!shader) {
+			throw new Error(`Could not create shader program for ${name}`)
+		}
+		shaders[name] = shader
+	}
+	return shaders
+}
+
+function createShaderWrapper(data: ShaderCompilationData): ShaderWrapper {
+	const program = gl.createProgram()
+	if (!program) {
 		throw new Error("Could not create shader program")
 	}
 
-	for (const type of ShaderTypes) {
-		const source = await getShaderSource(type)
-		if (!source) {
-			throw new Error(`Could not get shader source: ${type}`)
+	const compileShader = <T extends IShader>(shader: T): WebGLShader => {
+		const glShader = gl.createShader(shader.type)
+		if (!glShader) {
+			throw new Error(`Could not create shader (type = ${shader.type})`)
 		}
-		const shader = loadShader(gl, ShaderData[type].glType, source)
-		if (!shader) {
-			throw new Error(`Could not load shader: ${type}`)
+		gl.shaderSource(glShader, shader.source)
+		gl.compileShader(glShader)
+		if (!gl.getShaderParameter(glShader, gl.COMPILE_STATUS)) {
+			throw new Error(`Could not compile shader: ${gl.getShaderInfoLog(glShader)}`)
 		}
-		gl.attachShader(shaderProgram, shader)
+		return glShader
 	}
 
-	gl.linkProgram(shaderProgram)
-	if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-		console.log("Unable to initialize the shader program: " + gl.getProgramInfoLog(shaderProgram))
-		return null
+	const vertexShader = compileShader(data.vertex)
+	const fragShader = compileShader(data.frag)
+	gl.attachShader(program, vertexShader)
+	gl.attachShader(program, fragShader)
+	gl.linkProgram(program)
+	if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+		console.log("Unable to initialize the shader program: " + gl.getProgramInfoLog(program))
+		return null as never
 	}
-
-	return shaderProgram
-}
-
-function loadShader(gl: WebGL2RenderingContext, glType: number, source: string) {
-	console.log("Loading shader: ", glType, source)
-	const shader = gl.createShader(glType)
-	if (!shader) {
-		throw new Error("Could not create shader")
+	gl.useProgram(program)
+	const attribs = {} as Record<Attribute, number>
+	for (const attrib of Attributes) {
+		attribs[attrib] = gl.getAttribLocation(program, attrib)
 	}
-
-	gl.shaderSource(shader, source)
-	gl.compileShader(shader)
-
-	const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
-	if (success) {
-		return shader
+	const uniforms = {} as Record<Uniform, WebGLUniformLocation>
+	for (const uniform of Uniforms) {
+		const loc = gl.getUniformLocation(program, uniform)
+		if (!loc) {
+			throw new Error(`Could not find location for uniform ${uniform}`)
+		}
+		uniforms[uniform] = loc
 	}
-
-	console.log(gl.getShaderInfoLog(shader))
-	gl.deleteShader(shader)
+	gl.useProgram(null)
+	return { program, attribs, uniforms }
 }

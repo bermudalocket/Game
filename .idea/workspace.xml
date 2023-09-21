@@ -5,9 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9b8daabd-3266-4443-8f61-1138762ebcb5" name="Changes" comment="Canvas viewport auto-resize">
-      <change beforePath="$PROJECT_DIR$/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks.client.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks.server.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/MeshUtil.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/RGBA.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/components/ColorComponent.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/components/Component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/components/MeshComponent.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/components/ShaderComponent.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/+layout.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/GLState.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GLState.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/GOManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GOManager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/GameObject.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/GameObject.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/Mesh.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/Mesh.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/components/Canvas.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/Canvas.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/components/DebugBox.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/DebugBox.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/performance.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/performance.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/render.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/render.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/shaders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/shaders.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/+layout.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/+layout.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/shaders/frag_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/static/shaders/frag_color.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/shaders/vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/static/shaders/vertex_color.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,10 +80,11 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.5.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.5.1&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.13.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.13.0&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -69,15 +93,20 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\work\\code\\git\\js\\game\\node_modules\\typescript\\lib&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/bermudalocket/git/game/node_modules/typescript/lib&quot;,
     &quot;typescript.add.unambiguous.imports.on.the.fly&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/lib/ColorComponent.ts" />
       <recent name="$PROJECT_DIR$/src/lib/shaders.ts" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/lib/components" />
+      <recent name="$PROJECT_DIR$/src/routes" />
     </key>
   </component>
   <component name="RunManager" selected="npm.dev">
@@ -101,6 +130,8 @@
       <workItem from="1694628713542" duration="7168000" />
       <workItem from="1694680810567" duration="3745000" />
       <workItem from="1694697434983" duration="5635000" />
+      <workItem from="1695069232174" duration="8306000" />
+      <workItem from="1695247721950" duration="2527000" />
     </task>
     <task id="LOCAL-00001" summary="Make gl global">
       <option name="closed" value="true" />
